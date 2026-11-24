@@ -1,0 +1,467 @@
+/* =====================================================================
+   3D product page: light studio, ghost-glass car, black hover cards.
+   Same tokens as the landing page (styles.css).
+   ===================================================================== */
+html[data-page='product'] body {
+  background: #e9eaec;
+  overflow: hidden;
+}
+
+.pp {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #e9eaec;
+  color: var(--ink);
+}
+.pp__stage {
+  position: absolute;
+  inset: 0;
+}
+.pp__canvas {
+  touch-action: none; /* dragging rotates the car; it must never scroll the page */
+}
+
+/* title block (never blocks the canvas) */
+.pp__head {
+  position: absolute;
+  inset: 104px 0 auto 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.pp__title {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.pp__sub {
+  margin-top: 12px;
+  max-width: 340px;
+  font-size: 0.95rem;
+  color: var(--mute-l);
+}
+
+/* pins on a light background */
+.pp .hot__dot {
+  border-color: rgba(11, 11, 12, 0.72);
+  background: rgba(255, 255, 255, 0.6);
+}
+.pp .hot__dot i {
+  --c: #0b0b0c;
+}
+/* the rig sets data-side from the pin's screen position: the card always opens toward the centre */
+.pp .hot[data-side='right'] .hot__card {
+  left: 15px;
+  right: auto;
+  padding-left: 16px;
+  padding-right: 0;
+  transform: translate(-8px, -50%);
+}
+.pp .hot[data-side='left'] .hot__card {
+  right: 15px;
+  left: auto;
+  padding-right: 16px;
+  padding-left: 0;
+  transform: translate(8px, -50%);
+}
+.pp .hot.is-active .hot__card {
+  transform: translate(0, -50%);
+}
+
+/* bottom dock: one chip per shoppable part + two tools */
+.dock {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  z-index: 6;
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  transform: translateX(-50%);
+  border: 1px solid var(--line-l);
+  border-radius: 24px;
+  background: var(--white);
+}
+.dock::-webkit-scrollbar {
+  display: none;
+}
+.dock__chip {
+  flex: none;
+  width: 96px;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  padding: 10px 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.dock__chip:hover,
+.dock__chip.is-on {
+  background: #f1f1ef;
+  border-color: var(--ink);
+}
+.dock__art {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  padding: 7px;
+  border-radius: 50%;
+  background: #ecece9;
+}
+.dock__art .pa-svg {
+  width: 100%;
+  height: 100%;
+}
+.dock__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+.dock__sep {
+  flex: none;
+  width: 1px;
+  margin: 8px 4px;
+  background: var(--line-l);
+}
+.dock__tool {
+  flex: none;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line-l);
+  border-radius: 14px;
+  background: none;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.dock__tool:hover {
+  border-color: var(--ink);
+}
+.dock__switch {
+  position: relative;
+  width: 30px;
+  height: 18px;
+  border-radius: 9px;
+  background: #c9cbcf;
+  transition: background-color 0.2s;
+}
+.dock__switch i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: transform 0.25s var(--ease);
+}
+.dock__switch.is-on {
+  background: var(--ink);
+}
+.dock__switch.is-on i {
+  transform: translateX(12px);
+}
+.dock__empty {
+  align-self: center;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  color: var(--mute-l);
+}
+
+.pp__badge {
+  left: 16px;
+  right: auto;
+  bottom: 124px;
+  max-width: min(420px, calc(100vw - 32px));
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--ink);
+  line-height: 1.45;
+}
+.pp__error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 7;
+  display: grid;
+  gap: 6px;
+  max-width: min(440px, calc(100vw - 40px));
+  padding: 20px 24px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line-l);
+  border-radius: var(--r-md);
+  background: var(--white);
+  text-align: center;
+}
+.pp__error span {
+  font-size: 0.9rem;
+  color: var(--mute-l);
+}
+
+.pp__empty {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 7;
+  width: min(520px, calc(100vw - 32px));
+  padding: 32px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line-l);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.pp__empty h2 {
+  margin-top: 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.pp__empty p {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: var(--mute-l);
+}
+.pp__empty ol {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0 18px;
+  list-style: decimal;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.pp__empty code,
+.pp__badge code {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: #ecece9;
+  font-size: 0.85em;
+}
+.pp__badge code {
+  background: rgba(255, 255, 255, 0.16);
+}
+.pp__empty-link {
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pp__pick {
+  position: absolute;
+  right: 16px;
+  top: 88px;
+  z-index: 7;
+  display: grid;
+  gap: 8px;
+  width: min(380px, calc(100vw - 32px));
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.85rem;
+}
+.pp__pick strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute-d);
+}
+.pp__pick i {
+  font-style: normal;
+  color: var(--mute-d);
+}
+.pp__pick code {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #1c1c1f;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  word-break: break-all;
+}
+.pp__pick button {
+  justify-self: start;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+.pp__pick small {
+  color: var(--mute-d);
+}
+
+@media (max-width: 900px) {
+  .pp__head {
+    top: 88px;
+  }
+  .dock {
+    bottom: 16px;
+  }
+  .dock__chip {
+    width: 84px;
+  }
+  .pp__badge {
+    bottom: 132px;
+  }
+  .pp .hot[data-side='right'] .hot__card,
+  .pp .hot[data-side='left'] .hot__card {
+    left: 50%;
+    right: auto;
+    top: 24px;
+    padding: 0;
+    transform: translate(-50%, -8px);
+  }
+  .pp .hot.is-active .hot__card {
+    transform: translate(-50%, 0);
+  }
+}
+
+/* markers: a quiet "+" on the part, the card eases in beside it */
+.pp .hot {
+  transition: opacity 0.2s;
+}
+.pp .hot__dot {
+  left: -12px;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+}
+.pp .hot__dot i {
+  width: 10px;
+  height: 10px;
+}
+.pp .hot .hot__card {
+  --dx: -8px;
+  animation: pinIn 0.22s var(--ease) both;
+}
+.pp .hot[data-side='left'] .hot__card {
+  --dx: 8px;
+}
+.pp .hot[data-side='right'] .hot__card {
+  left: 12px;
+  padding-left: 16px;
+}
+.pp .hot[data-side='left'] .hot__card {
+  right: 12px;
+  padding-right: 16px;
+}
+@keyframes pinIn {
+  from {
+    opacity: 0;
+    transform: translate(var(--dx), -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+@keyframes pinInM {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+@media (max-width: 900px) {
+  .pp .hot .hot__card {
+    animation-name: pinInM;
+  }
+}
+/* bottom bar: two view tools and one call to action */
+.dock {
+  padding: 6px;
+  gap: 8px;
+  border-radius: 18px;
+}
+.dock__cta {
+  flex: none;
+  align-self: center;
+  height: 44px;
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .dock {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: calc(100vw - 32px);
+  }
+  .dock__cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.pp .hot--bare .hot__dot {
+  display: none;
+}
+.pp .hot--bare[data-side='right'] .hot__card {
+  left: 14px;
+}
+.pp .hot--bare[data-side='left'] .hot__card {
+  right: 14px;
+}
+
+.pp .hot--bare[data-side='right'] .hot__card {
+  left: 2px;
+  padding-left: 12px;
+}
+.pp .hot--bare[data-side='left'] .hot__card {
+  right: 2px;
+  padding-right: 12px;
+}
+
+.pp .hot__wrap {
+  position: relative;
+}
+.pp .hot__x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0b0b0c;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.pp .hot__x:hover {
+  background: #fff;
+}

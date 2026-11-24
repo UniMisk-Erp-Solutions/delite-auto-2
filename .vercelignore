@@ -1,0 +1,8 @@
+# Not needed to build the static site (the 3D models are served from Supabase Storage)
+server/models
+backups
+exports
+tools
+supabase
+*.zip
+*.blend

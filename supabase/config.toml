@@ -1,0 +1,20 @@
+# Supabase CLI project config (prototype). Everything else uses CLI defaults.
+# Link it to your hosted project once:  npx supabase link --project-ref <your-project-ref>
+project_id = "delite"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+
+[db]
+port = 54322
+major_version = 15
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"

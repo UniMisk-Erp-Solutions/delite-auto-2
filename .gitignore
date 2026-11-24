@@ -1,0 +1,26 @@
+# dependencies and build output
+node_modules/
+dist/
+.vercel/
+
+# secrets: never commit these (use the *.example files)
+.env
+.env.*
+!.env.example
+*.local
+
+# big local-only files
+*.zip
+*.blend
+*.blend1
+backups/
+exports/
+
+# tooling
+.claude/
+supabase/.temp/
+supabase/.branches/
+node_trace.*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
