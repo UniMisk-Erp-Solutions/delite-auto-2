@@ -8,6 +8,7 @@
     "build": "npm run build -w client",
     "start": "npm run start -w server",
     "seed:generate": "node scripts/generate-seed.mjs",
+    "seed:push": "node scripts/seed-remote.mjs",
     "models:upload": "node scripts/upload-models.mjs"
   },
   "devDependencies": {

@@ -26,14 +26,16 @@ login, cart persistence or checkout yet.
      ```
    - **Dashboard:** open *SQL Editor*, paste `supabase/migrations/20260101000000_init.sql`, run it, then paste
      `supabase/seed.sql` and run that too.
-3. Upload the 3D models (about 62 MB, from `server/models`) to the public `models` bucket:
+3. Put the products and the 3D models (about 62 MB, from `server/models`) into your project:
    ```bash
    cp .env.example .env        # then fill in SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (Project Settings -> API)
-   npm run models:upload
+   npm run seed:push           # upserts the 30 sample products (skip if you ran seed.sql already)
+   npm run models:upload       # uploads delite.glb and innova-parts.glb to the public "models" bucket
    ```
-   (Windows PowerShell: `Copy-Item .env.example .env`.) The service-role key is a secret. It lives only in your
-   local, git-ignored `.env` and is never used by the website.
-4. Copy two values from *Project Settings -> API*: the **Project URL** and the **anon (public) key**.
+   (Windows PowerShell: `Copy-Item .env.example .env`.) The secret key (`sb_secret_...`, or the legacy
+   `service_role` key) lives only in your local, git-ignored `.env` and is never used by the website.
+4. Copy two values from *Project Settings -> API*: the **Project URL** and the **publishable key**
+   (`sb_publishable_...`; the legacy `anon` key works too).
 
 Free plan check: each GLB is under the 50 MB per-file limit. If you ever replace a model with a bigger one,
 raise the limit under *Storage -> Settings*.
@@ -49,7 +51,7 @@ raise the limit under *Storage -> Settings*.
    | Name | Value |
    | --- | --- |
    | `VITE_SUPABASE_URL` | the Project URL, e.g. `https://abcd1234.supabase.co` |
-   | `VITE_SUPABASE_ANON_KEY` | the anon / publishable key |
+   | `VITE_SUPABASE_ANON_KEY` | the publishable (or anon) key. Do **not** add the secret key here |
 
 4. Deploy. After changing a variable, redeploy (Vite bakes them in at build time).
 
@@ -71,7 +73,7 @@ If the 3D car shows the grey placeholder, the model URL is wrong or the upload s
 | --- | --- |
 | Run everything locally with no cloud | Leave the `VITE_*` variables empty and run `npm run dev` |
 | Run locally against Supabase | Copy `client/.env.example` to `client/.env.local`, fill it in, `npm run dev -w client` |
-| Add or change products | Edit `client/src/data/products.js`, `npm run seed:generate`, run `supabase/seed.sql` again (it upserts) |
+| Add or change products | Edit `client/src/data/products.js`, then `npm run seed:push` (upserts by id; `npm run seed:generate` rewrites `supabase/seed.sql` if you prefer the SQL editor) |
 | Replace a 3D model | Put the file in `server/models`, `npm run models:upload` (hard refresh; CDN caches for 1 hour) |
 | Make it production-grade later | Add Supabase Auth, an `orders` table with per-user RLS, and move `products.js` content fully to the DB |
 

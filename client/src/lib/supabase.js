@@ -16,7 +16,9 @@ export const SUPABASE_ON = !!(URL_ && KEY);
 export const MODELS_BASE =
   trim(import.meta.env.VITE_MODELS_URL) || (URL_ ? `${URL_}/storage/v1/object/public/models` : '');
 
-const headers = (extra) => ({ apikey: KEY, Authorization: `Bearer ${KEY}`, ...extra });
+// New-style keys (sb_publishable_...) are not JWTs, so they go in `apikey` only; legacy JWT anon keys also
+// go in Authorization.
+const headers = (extra) => ({ apikey: KEY, ...(KEY.startsWith('sb_') ? {} : { Authorization: `Bearer ${KEY}` }), ...extra });
 
 async function fail(res) {
   let msg = '';

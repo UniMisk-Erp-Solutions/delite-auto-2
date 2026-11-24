@@ -1,30 +1,12 @@
 // Uploads the 3D models in server/models to the public "models" bucket of your Supabase project.
 //   npm run models:upload
 // Needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (from the repo-root .env or the environment).
-// The service-role key is a secret: it is only ever used here, never in the browser, never on Vercel.
+// The secret key is only ever used here, never in the browser, never on Vercel.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { loadSupabaseEnv, root } from './_env.mjs';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-// tiny .env reader so no extra dependency (or Node flag) is needed
-const envFile = path.join(root, '.env');
-if (fs.existsSync(envFile)) {
-  for (const line of fs.readFileSync(envFile, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/i);
-    if (m && !m[1].startsWith('#') && process.env[m[1]] === undefined) {
-      process.env[m[1]] = m[2].replace(/^(['"])(.*)\1$/, '$2');
-    }
-  }
-}
-
-const url = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-if (!url || !key) {
-  console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. Copy .env.example to .env and fill them in.');
-  process.exit(1);
-}
+const { url, headers } = loadSupabaseEnv();
 
 const dir = path.join(root, 'server/models');
 const files = fs.readdirSync(dir).filter((f) => /\.(glb|gltf|bin|png|jpe?g|webp)$/i.test(f));
@@ -42,8 +24,7 @@ for (const f of files) {
   const res = await fetch(`${url}/storage/v1/object/models/${encodeURIComponent(f)}`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${key}`,
-      apikey: key,
+      ...headers,
       'Content-Type': TYPES[ext] || 'image/jpeg',
       'x-upsert': 'true', // replace if it is already there
       'cache-control': 'max-age=3600',
