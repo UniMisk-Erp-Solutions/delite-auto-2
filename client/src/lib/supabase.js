@@ -6,8 +6,10 @@
 // security policies in supabase/migrations. Never put the service-role key in a VITE_ variable.
 const trim = (s) => (s || '').trim().replace(/\/+$/, '');
 
-const URL_ = trim(import.meta.env.VITE_SUPABASE_URL);
-const KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+// __SUPABASE_URL__ / __SUPABASE_KEY__ are filled in at build time by vite.config.js, which accepts the
+// VITE_*, NEXT_PUBLIC_* and plain SUPABASE_* variable names (so Vercel's Supabase integration just works).
+const URL_ = trim(__SUPABASE_URL__);
+const KEY = (__SUPABASE_KEY__ || '').trim();
 
 export const SUPABASE_ON = !!(URL_ && KEY);
 

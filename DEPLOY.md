@@ -46,7 +46,10 @@ raise the limit under *Storage -> Settings*.
 2. Leave the settings as detected. `vercel.json` already sets: install `npm install`, build `npm run build`,
    output `client/dist`, and rewrites every path to `index.html` so `/product` and `/shop` work on refresh.
    (Root Directory stays the repo root.)
-3. Add these Environment Variables (Production, Preview and Development):
+3. The public Supabase URL and publishable key are already committed in `client/.env.production`, so a build works
+   with nothing set. To point at a different project, add these Environment Variables (Production, Preview and
+   Development); they override the file. The build also accepts the names Vercel's Supabase integration creates
+   (`NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_URL`, `*_ANON_KEY`, `*_PUBLISHABLE_KEY`):
 
    | Name | Value |
    | --- | --- |

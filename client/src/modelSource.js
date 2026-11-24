@@ -24,5 +24,9 @@ export async function getManifest(set = 'landing', { signal, demo = false } = {}
   const qs = set === 'parts' ? `?set=parts${demo ? '&demo=1' : ''}` : '';
   const res = await fetch(`/api/model${qs}`, { signal });
   if (!res.ok) throw new Error(`model server answered ${res.status}`);
+  if (!(res.headers.get('content-type') || '').includes('json')) {
+    // a static host answered with the web page: there is no model server here and Supabase is not configured
+    throw new Error('No model source. Set the Supabase URL and public key for this build (see DEPLOY.md), or run the local model server.');
+  }
   return res.json();
 }
