@@ -15,6 +15,8 @@ import {
 } from '../config.js';
 import { applyLeather } from './leather.js';
 import { addScreen } from './screen.js';
+import { addPlates } from './plates.js';
+import { setupXray } from './xray.js';
 import { store } from '../store.js';
 import { getManifest } from '../modelSource.js';
 import PlaceholderCar from './PlaceholderCar.jsx';
@@ -139,7 +141,7 @@ function upgradeMaterial(m) {
 }
 
 // Orient, scale and centre any model: length along X, front toward +X, wheels on y=0.
-function prepare(root) {
+async function prepare(root) {
   // drop stray objects (floor plates, duplicate copies of the car) before measuring
   const kids = [...root.children];
   let keep = MODEL.keepOnly.length ? kids.filter((k) => MODEL.keepOnly.includes(k.name)) : kids;
@@ -154,6 +156,8 @@ function prepare(root) {
   });
 
   addScreen(root); // real UI on the dashboard display
+  addPlates(root); // brand name on the front and rear number plates
+  await setupXray(root); // top-view section: only the body shows, as X-ray glass, carpet solid (driven by scroll in Scene3D)
 
   const pre = new THREE.Group();
   pre.add(root);
@@ -231,7 +235,8 @@ export default function CarModel({ onStatus }) {
             ? await loadOBJ(model, textures, onProgress)
             : await loadGLTF(model, onProgress);
         if (cancelled) return;
-        const car = prepare(root);
+        const car = await prepare(root);
+        if (cancelled) return;
         if (import.meta.env.DEV) window.__car = car; // handy for console debugging
         setObject(car);
         say({ status: 'ready', name: model.name });

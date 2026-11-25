@@ -289,7 +289,7 @@ export function Footer() {
             )}
           </div>
           <nav aria-label="Shop"><h3>Shop</h3>
-            <a href="#trending">Trending</a><a href="#categories">Categories</a><a href="#brands">Brands</a><a href="#interior">Interior</a><a href="#gps">Smart GPS</a>
+            <a href="#trending">Trending</a><a href="#categories">Carpets</a><a href="#brands">Brands</a><a href="#interior">Interior</a><a href="#gps">Smart GPS</a>
           </nav>
           <nav aria-label="Support"><h3>Support</h3>
             <a href="#services">Free fitting</a><a href="#footer">Track order</a><a href="#footer">Returns &amp; refunds</a><a href="#footer">Warranty</a><a href="#footer">Contact us</a>

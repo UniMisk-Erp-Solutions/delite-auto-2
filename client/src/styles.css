@@ -810,7 +810,8 @@ svg {
   text-transform: uppercase;
   color: var(--mute-d);
 }
-.sec--gps .hero__actions {
+.sec--gps .hero__actions,
+#categories .hero__actions {
   justify-content: flex-start;
 }
 

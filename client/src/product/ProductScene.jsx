@@ -9,6 +9,7 @@ import { CAR_LENGTH } from '../config.js';
 import { applyLeather } from '../three/leather.js';
 import { loadPartsModel } from './loadModel.js';
 import { makeGhostGlass } from './glass.js';
+import { addPlates } from '../three/plates.js';
 import { PART_DEFS, GHOST_NAMES, DEMO_GHOST, MANUAL_PINS, LEATHER_MATERIALS, BAKED_COLOR_MATERIALS, nameChain } from './parts.js';
 
 // BVH makes picking on dense meshes instant (this chunk is only loaded on the product page)
@@ -224,6 +225,7 @@ function Stage({ xray, active, onHover, onReady, onStatus, onSelect, pick, onPic
       .then(({ root: r, demo, name }) => {
         if (dead) return;
         data.current = classify(r, demo);
+        addPlates(r); // after classify(): the plates are solid, never turned into ghost glass or a hoverable part
         setRoot(r);
         onReady({ demo, name, parts: data.current.list });
         onStatus({ status: 'ready' });

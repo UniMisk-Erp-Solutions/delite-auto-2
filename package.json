@@ -9,7 +9,8 @@
     "start": "npm run start -w server",
     "seed:generate": "node scripts/generate-seed.mjs",
     "seed:push": "node scripts/seed-remote.mjs",
-    "models:upload": "node scripts/upload-models.mjs"
+    "models:upload": "node scripts/upload-models.mjs",
+    "xray:find": "node scripts/find-xray-parts.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"

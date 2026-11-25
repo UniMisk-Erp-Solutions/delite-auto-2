@@ -52,6 +52,30 @@ export const SCREEN = {
   brightness: 0.95,
 };
 
+// Number plates, front and rear, lettered with the brand name (see three/plates.js).
+// All numbers are in the exported mesh's own coordinates (metres; +Y = towards the front of the car,
+// -Z = up), the same space as SCREEN above. `at` is a point on the surface the plate is mounted on,
+// `normal` is the direction the plate faces. The front plate sits exactly on the flat panel of the bumper
+// (0.517 x 0.091 m, read from the mesh). The tailgate only has a plate-shaped recess, no plate, so the
+// rear one is mounted in that recess, same size and finish as the front.
+export const PLATE = {
+  text: BRAND, // what is written on the plates
+  caps: true, // spaced capitals, exactly like the logo in the top-left corner
+  hosts: ['model_2001', 'ghost_body'], // glTF node that carries the body: landing model / separate-parts model
+  width: 0.514,
+  height: 0.088,
+  depth: 0.006, // how far the plate stands off the car
+  up: [0, 0, -1],
+  front: { at: [-0.0055, 2.373, -0.5315], normal: [0, 1, 0] },
+  // the recess floor is a flat panel leaning back ~12.7 degrees, so the rear plate leans with it
+  rear: { at: [-0.0055, -2.331, -0.935], normal: [0, -0.976, -0.2197] },
+};
+
+// The top-view section (index 2) shows the whole car as X-ray glass with only the carpet solid (three/xray.js).
+// Nothing to switch: the X-ray fades in over rampIn and out over rampOut, in fractional section units, so the
+// car is fully solid again before the camera flies into the cabin (section 3).
+export const XRAY = { section: 2, rampIn: [1.3, 1.85], rampOut: [2.15, 2.6] };
+
 // Shop-the-interior pins. `p` is a point on the car in the page's car space (front = +X, up = +Y,
 // right = +Z). They are projected through the live camera every frame, so they stay glued to the
 // part while the camera flies in. `side` is where the product label opens.

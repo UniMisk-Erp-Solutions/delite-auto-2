@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { store } from '../store.js';
+import { xrayLevel } from './xray.js';
 
 const damp = THREE.MathUtils.damp;
 const smooth = (a, b, x) => {
@@ -332,7 +333,12 @@ export default function Floor() {
     const on = h > 0.003;
     parts.floor.visible = on; // hidden = the mirror pass is skipped entirely
     parts.dome.visible = on;
-    if (r.blob) r.blob.material.opacity = 1 - 0.97 * h;
+    if (r.blob) {
+      // the car's soft ground shadow: gone while the hero scene is on, and gone again in the top-view X-ray
+      // section, where a dark patch under a see-through car only muddies it
+      r.blob.material.opacity = (1 - 0.97 * h) * (1 - xrayLevel());
+      r.blob.visible = r.blob.material.opacity > 0.003;
+    }
     if (Math.abs(h - target) > 0.001) invalidate();
   });
 

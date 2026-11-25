@@ -67,7 +67,7 @@ export function Nav() {
         <a className="nav__logo" href="#home">{BRAND}</a>
         <nav className="nav__links" aria-label="Primary">
           <a href="#finder">Find my fit</a>
-          <a href="#categories">Categories</a>
+          <a href="#categories">Carpets</a>
           <a href="#trending">Trending</a>
           <a href="/product">3D Explorer</a>
           <a href="/shop">All products</a>

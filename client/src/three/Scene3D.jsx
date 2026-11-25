@@ -5,6 +5,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { store } from '../store.js';
 import { sampleKeys, clamp, D } from '../config.js';
 import CarModel from './CarModel.jsx';
+import { setXray, xrayAmount } from './xray.js';
 import Floor from './Floor.jsx';
 
 const damp = THREE.MathUtils.damp;
@@ -74,6 +75,7 @@ function Rig() {
     const gap = Math.abs(store.section - s.s);
     s.s = damp(s.s, store.section, 7 + Math.min(gap, 1.5) * 8, dt);
     if (gap > 0.002) perf.regress(); // drop resolution while moving, restore when still
+    setXray(xrayAmount(s.s)); // X-ray car for the top-view section, follows the same damped scroll value as the camera
 
     const kk = sampleKeys(s.s, k.current);
     const aspect = size.width / size.height;

@@ -20,26 +20,33 @@ export function makeGhostGlass() {
     side: THREE.FrontSide, // one layer per panel: far-side panels face away and are skipped
   });
 
+  // 1 = the full X-ray look (what /product uses). The landing page lowers it to fade the X-ray in and out
+  // as you scroll (m.userData.fade.value, see three/xray.js).
+  const fade = { value: 1 };
+  m.userData.fade = fade;
+
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uAlphaMin = { value: 0.05 }; // looking straight through
     shader.uniforms.uAlphaMax = { value: 0.6 }; // at grazing angles
     shader.uniforms.uFresnelPow = { value: 2.2 };
+    shader.uniforms.uFade = fade;
     shader.fragmentShader = shader.fragmentShader
       .replace(
         '#include <common>',
         `#include <common>
         uniform float uAlphaMin;
         uniform float uAlphaMax;
-        uniform float uFresnelPow;`
+        uniform float uFresnelPow;
+        uniform float uFade;`
       )
       .replace(
         '#include <opaque_fragment>',
         `float ghostFres = pow(1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0), uFresnelPow);
         outgoingLight += vec3(0.86, 0.91, 0.96) * ghostFres * 0.32;
-        diffuseColor.a = mix(uAlphaMin, uAlphaMax, ghostFres);
+        diffuseColor.a = mix(uAlphaMin, uAlphaMax, ghostFres) * uFade;
         #include <opaque_fragment>`
       );
   };
-  m.customProgramCacheKey = () => 'ghost-glass-v1';
+  m.customProgramCacheKey = () => 'ghost-glass-v2';
   return m;
 }

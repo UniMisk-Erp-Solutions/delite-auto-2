@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { VEHICLES, YEARS, POPULAR, fitmentCount } from '../data/vehicles.js';
-import { CATEGORIES, PRODUCTS, inr } from '../data/products.js';
+import { PRODUCTS, inr } from '../data/products.js';
 import { shop } from '../shopStore.js';
 import { store } from '../store.js';
 import { HOTSPOTS } from '../config.js';
@@ -118,29 +118,22 @@ export function Finder() {
   );
 }
 
-/* 3 · CATEGORIES — top view ------------------------------------------------- */
+/* 3 · CARPETS — top view (only the car's body shows, as X-ray glass, and the carpet stays solid: three/xray.js) ---- */
 export function Categories() {
   return (
     <section id="categories" data-section className="sec sec--light">
       <div className="sec__inner" data-side="right">
-        <div className="copy copy--wide">
-          <Tag>Categories</Tag>
-          <h2 className="h2 reveal">Shop by category.</h2>
-          <p className="lead reveal">From the roof to the floor mats, everything your vehicle needs in one place.</p>
-          <ul className="cats">
-            {CATEGORIES.map((c, i) => (
-              <li key={c.id} className="reveal" style={{ '--d': `${0.1 + i * 0.06}s` }}>
-                <a href="#trending" className="cat">
-                  <span className="cat__icon"><Icon name={c.icon} size={28} /></span>
-                  <span className="cat__txt">
-                    <strong>{c.name}</strong>
-                    <small>{c.blurb}</small>
-                  </span>
-                  <span className="cat__count">{new Intl.NumberFormat('en-IN').format(c.count)}+</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+        <div className="copy">
+          <Tag>Carpets</Tag>
+          <h2 className="h2 reveal">Carpets are our speciality.</h2>
+          <p className="lead reveal">
+            Custom-fit for your exact car. Soft underfoot, easy to clean, and picked with help from our carpet experts.
+          </p>
+          <div className="hero__actions reveal">
+            <a className="btn btn--solid" href="/shop?q=mats">
+              Shop carpets <Icon name="arrow" size={18} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
